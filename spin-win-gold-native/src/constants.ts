@@ -8,7 +8,7 @@ export const REWARDS: RewardItem[] = [
   { id: 4, label: '250', value: 250, type: 'coins', color: '#fcd34d' },
   { id: 5, label: '5', value: 5, type: 'diamonds', color: '#93c5fd' },
   { id: 6, label: '500', value: 500, type: 'coins', color: '#d97706' },
-  { id: 7, label: 'JACKPOT', value: 2000, type: 'coins', color: '#ef4444' },
+  { id: 7, label: 'JACKPOT', value: 1000, type: 'coins', color: '#ef4444' },
 ];
 
 export const TASKS: Task[] = [
@@ -20,6 +20,10 @@ export const TASKS: Task[] = [
 ];
 
 export const DAILY_REWARDS = [10, 20, 50, 100, 150, 250, 1000];
+
+// Probability weights for each reward (higher = more likely)
+// Jackpot has very low probability (2%), others are distributed
+export const REWARD_WEIGHTS = [20, 18, 15, 12, 12, 10, 8, 3]; // Last one (3) is JACKPOT
 
 // Colors
 export const COLORS = {

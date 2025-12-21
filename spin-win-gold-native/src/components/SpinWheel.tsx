@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import Svg, { Path, Text as SvgText, Circle, G } from 'react-native-svg';
-import { REWARDS } from '../constants';
+import { REWARDS, REWARD_WEIGHTS } from '../constants';
 import { RewardItem } from '../types';
 import { COLORS } from '../constants';
 
@@ -26,13 +26,39 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ onResult, disabled }) => {
   const spinValue = useRef(new Animated.Value(0)).current;
   const currentRotation = useRef(0);
 
+  // Weighted random selection based on probability weights
+  const getWeightedRandomReward = (): number => {
+    const totalWeight = REWARD_WEIGHTS.reduce((sum, weight) => sum + weight, 0);
+    let random = Math.random() * totalWeight;
+    
+    for (let i = 0; i < REWARD_WEIGHTS.length; i++) {
+      random -= REWARD_WEIGHTS[i];
+      if (random <= 0) {
+        return i;
+      }
+    }
+    return REWARD_WEIGHTS.length - 1; // Fallback to last item
+  };
+
   const spin = () => {
     if (disabled || isSpinning) return;
 
     setIsSpinning(true);
-    const extraDegrees = Math.floor(Math.random() * 360);
+    
+    // Select reward using weighted probability
+    const selectedIndex = getWeightedRandomReward();
+    
+    // Calculate rotation to land on the selected segment
+    const segmentSize = 360 / REWARDS.length;
+    const targetAngle = selectedIndex * segmentSize + segmentSize / 2; // Center of segment
+    
+    // Add some randomness within the segment (±segmentSize/3) and multiple spins
+    const segmentRandomness = (Math.random() - 0.5) * (segmentSize / 3);
     const totalSpins = 5;
-    const newRotation = currentRotation.current + (totalSpins * 360) + extraDegrees;
+    const extraDegrees = Math.floor(Math.random() * 360);
+    
+    // Calculate final rotation: multiple spins + extra + target angle + small randomness
+    const newRotation = currentRotation.current + (totalSpins * 360) + extraDegrees + (360 - targetAngle) + segmentRandomness;
     
     Animated.timing(spinValue, {
       toValue: newRotation,
@@ -42,11 +68,7 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ onResult, disabled }) => {
     }).start(() => {
       setIsSpinning(false);
       currentRotation.current = newRotation;
-      
-      const normalizedDegrees = (360 - (newRotation % 360)) % 360;
-      const segmentSize = 360 / REWARDS.length;
-      const index = Math.floor(normalizedDegrees / segmentSize);
-      onResult(REWARDS[index]);
+      onResult(REWARDS[selectedIndex]);
     });
   };
 
