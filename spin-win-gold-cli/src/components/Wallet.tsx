@@ -60,10 +60,6 @@ const Wallet: React.FC<WalletProps> = ({ balance, diamonds, transactions, onWith
             <Text style={styles.balanceValue}>{balance.toLocaleString()}</Text>
             <Text style={styles.balanceCurrency}>COINS</Text>
           </View>
-          <View style={styles.diamondBadge}>
-            <Icon name="diamond" size={18} color={COLORS.blue400} />
-            <Text style={styles.diamondText}>{diamonds} Diamonds</Text>
-          </View>
         </View>
       </LinearGradient>
 

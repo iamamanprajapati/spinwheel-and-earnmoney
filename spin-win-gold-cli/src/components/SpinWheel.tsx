@@ -47,18 +47,39 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ onResult, disabled }) => {
     
     // Select reward using weighted probability
     const selectedIndex = getWeightedRandomReward();
+    const selectedReward = REWARDS[selectedIndex];
     
     // Calculate rotation to land on the selected segment
     const segmentSize = 360 / REWARDS.length;
-    const targetAngle = selectedIndex * segmentSize + segmentSize / 2; // Center of segment
     
-    // Add some randomness within the segment (±segmentSize/3) and multiple spins
-    const segmentRandomness = (Math.random() - 0.5) * (segmentSize / 3);
-    const totalSpins = 5;
-    const extraDegrees = Math.floor(Math.random() * 360);
+    // The center angle of the selected segment (relative to wheel, 0 = top)
+    // Segment 0 center is at 22.5°, segment 1 at 67.5°, etc.
+    const segmentCenterAngle = selectedIndex * segmentSize + segmentSize / 2;
     
-    // Calculate final rotation: multiple spins + extra + target angle + small randomness
-    const newRotation = currentRotation.current + (totalSpins * 360) + extraDegrees + (360 - targetAngle) + segmentRandomness;
+    // Add small randomness within the segment (±20% of segment size) for natural feel
+    const segmentRandomness = (Math.random() - 0.5) * (segmentSize * 0.4);
+    const finalTargetAngle = segmentCenterAngle + segmentRandomness;
+    
+    // Calculate how much we need to rotate to bring this segment to the top (0°)
+    // If segment center is at X°, we need to rotate by (360 - X)° to bring it to top
+    const rotationToTarget = 360 - finalTargetAngle;
+    
+    // Get current rotation modulo 360 to find where wheel currently is
+    const currentRotationMod = currentRotation.current % 360;
+    
+    // Calculate additional rotation needed from current position
+    let additionalRotation = rotationToTarget - currentRotationMod;
+    
+    // Ensure we rotate forward (positive direction)
+    if (additionalRotation < 0) {
+      additionalRotation += 360;
+    }
+    
+    // Add multiple full spins (4-6 spins) for visual effect
+    const totalSpins = 4 + Math.floor(Math.random() * 3);
+    
+    // Calculate final rotation: current + multiple spins + rotation to target
+    const newRotation = currentRotation.current + (totalSpins * 360) + additionalRotation;
     
     Animated.timing(spinValue, {
       toValue: newRotation,
@@ -68,7 +89,7 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ onResult, disabled }) => {
     }).start(() => {
       setIsSpinning(false);
       currentRotation.current = newRotation;
-      onResult(REWARDS[selectedIndex]);
+      onResult(selectedReward);
     });
   };
 

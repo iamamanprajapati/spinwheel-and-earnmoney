@@ -43,7 +43,7 @@ const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewEnum>(ViewEnum.WHEEL);
   const [stats, setStats] = useState<UserStats>({
     balance: 250,
-    diamonds: 5,
+    diamonds: 0,
     level: 1,
     exp: 20,
     spinsLeft: 5,
@@ -153,16 +153,17 @@ const App: React.FC = () => {
   };
 
   const handleWheelResult = (reward: RewardItem) => {
+    const coinsToAdd = reward.type === 'coins' ? reward.value : 0;
+    
     setStats(prev => ({
       ...prev,
-      balance: prev.balance + (reward.type === 'coins' ? reward.value : 0),
-      diamonds: prev.diamonds + (reward.type === 'diamonds' ? reward.value : 0),
+      balance: prev.balance + coinsToAdd,
       spinsLeft: prev.spinsLeft - 1,
       exp: prev.exp + 10
     }));
 
     if (reward.value > 0) {
-      addTransaction(reward.value, 'earn', `Lucky Spin: ${reward.label}`);
+      addTransaction(reward.value, 'earn', `Lucky Spin: ${reward.label} Coins`);
     }
     
     fetchLuck();
@@ -326,7 +327,7 @@ const App: React.FC = () => {
         return (
           <Wallet 
             balance={stats.balance} 
-            diamonds={stats.diamonds} 
+            diamonds={0} 
             transactions={transactions}
             onWithdraw={handleWithdraw}
           />
@@ -993,6 +994,7 @@ const styles = StyleSheet.create({
   navIconContainerActive: {
     backgroundColor: 'rgba(79, 70, 229, 0.15)',
     transform: [{ scale: 1.1 }],
+    borderRadius: 14,
   },
   navLabel: {
     fontSize: 9,

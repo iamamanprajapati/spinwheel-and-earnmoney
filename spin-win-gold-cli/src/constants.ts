@@ -2,11 +2,11 @@ import { RewardItem, Task } from './types';
 
 export const REWARDS: RewardItem[] = [
   { id: 0, label: '50', value: 50, type: 'coins', color: '#fbbf24' },
-  { id: 1, label: '10', value: 10, type: 'diamonds', color: '#60a5fa' },
+  { id: 1, label: '25', value: 25, type: 'coins', color: '#60a5fa' },
   { id: 2, label: '100', value: 100, type: 'coins', color: '#f59e0b' },
   { id: 3, label: 'Try Again', value: 0, type: 'empty', color: '#94a3b8' },
   { id: 4, label: '250', value: 250, type: 'coins', color: '#fcd34d' },
-  { id: 5, label: '5', value: 5, type: 'diamonds', color: '#93c5fd' },
+  { id: 5, label: '75', value: 75, type: 'coins', color: '#93c5fd' },
   { id: 6, label: '500', value: 500, type: 'coins', color: '#d97706' },
   { id: 7, label: 'JACKPOT', value: 1000, type: 'coins', color: '#ef4444' },
 ];

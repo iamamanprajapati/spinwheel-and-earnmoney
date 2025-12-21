@@ -30,7 +30,7 @@ export interface RewardItem {
   id: number;
   label: string;
   value: number;
-  type: 'coins' | 'diamonds' | 'empty';
+  type: 'coins' | 'empty';
   color: string;
 }
 
