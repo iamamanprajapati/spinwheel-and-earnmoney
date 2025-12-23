@@ -79,9 +79,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.spinwingoldcli"
+    namespace "com.spinwheel.earnmoney"
     defaultConfig {
-        applicationId "com.spinwingoldcli"
+        applicationId "com.spinwheel.earnmoney"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
